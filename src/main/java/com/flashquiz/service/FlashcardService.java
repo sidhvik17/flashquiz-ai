@@ -41,14 +41,18 @@ public class FlashcardService {
             headers.set("Authorization", "Bearer " + openRouterApiKey);
 
             // Create request payload
-            String requestBody = "{"
-                    + "\"model\": \"openai/gpt-3.5-turbo\","
-                    + "\"messages\": ["
-                    + "    {\"role\": \"system\", \"content\": \"You are a helpful flashcard generator.\"},"
-                    + "    {\"role\": \"user\", \"content\": \"Generate 5 question-answer flashcards about " + inputText + ". Format each as 'Q:' and 'A:' pairs.\"}"
-                    + "],"
-                    + "\"temperature\": 0.7"
-                    + "}";
+            String requestBody = """
+    {
+      "model": "openai/gpt-3.5-turbo",
+      "messages": [
+        {"role": "system", "content": "You are a helpful flashcard generator. Only use the information from the user-provided paragraph."},
+        {"role": "user", "content": "Paragraph: %s\\n\\nGenerate 5 flashcards (Q: and A:) based only on the paragraph."}
+      ],
+      "temperature": 0.7
+    }
+    """.formatted(inputText.replace("\"", "\\\""));
+
+
 
             System.out.println("📤 Request Body: " + requestBody);
 

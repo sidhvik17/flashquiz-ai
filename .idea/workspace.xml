@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="new commit using chatgpt api base url changed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/flashquiz/service/FlashcardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/flashquiz/service/FlashcardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,14 +65,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745056225501</updated>
-    </task>
-    <task id="LOCAL-00001" summary="test commit">
-      <option name="closed" value="true" />
-      <created>1745056952385</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1745056952385</updated>
     </task>
     <task id="LOCAL-00002" summary="Resolved merge conflicts">
       <option name="closed" value="true" />
@@ -460,7 +450,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745162938352</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="new commit using chatgpt api base url changed">
+      <option name="closed" value="true" />
+      <created>1745165919913</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1745165919914</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
