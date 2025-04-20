@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flashcards - FlashQuiz AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #003366;
+            padding: 2em;
+        }
+        h2 {
+            color: #004080;
+            border-bottom: 2px solid #004080;
+            padding-bottom: 0.3em;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 1.5em;
+            background: #e6f0ff;
+            padding: 1em;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 128, 0.1);
+        }
+        strong {
+            font-size: 1.1em;
+            color: #002855;
+        }
+        em {
+            display: block;
+            margin-top: 0.5em;
+            font-style: normal;
+            color: #004080;
+        }
+        .retry {
+            margin-top: 2em;
+        }
+        .retry a {
+            background: #004080;
+            color: white;
+            padding: 0.7em 1.2em;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .retry a:hover {
+            background-color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+<h2>Generated Flashcards</h2>
+<ul>
+    <li th:each="card : ${flashcards}">
+        <strong th:text="${card.question}"></strong>
+        <em th:text="${card.answer}"></em>
+    </li>
+</ul>
+<div class="retry">
+    <a href="/">Try Another Topic</a>
+</div>
+</body>
+</html>

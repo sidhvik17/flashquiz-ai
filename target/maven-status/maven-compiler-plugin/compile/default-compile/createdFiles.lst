@@ -1,0 +1,5 @@
+com\flashquiz\FlashquizApplication.class
+com\flashquiz\controller\FlashcardController.class
+com\flashquiz\service\FlashcardService.class
+com\flashquiz\repository\FlashcardRepository.class
+com\flashquiz\model\Flashcard.class

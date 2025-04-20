@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FlashQuiz AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #003366;
+            padding: 2em;
+        }
+        textarea {
+            width: 100%;
+            padding: 1em;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            background: #ffffff;
+        }
+        button {
+            margin-top: 1em;
+            padding: 0.7em 1.5em;
+            background-color: #004080;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0066cc;
+        }
+        .loader {
+            display: none;
+            margin-top: 1em;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #004080;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'inline-block';
+        }
+    </script>
+</head>
+<body>
+<h1>FlashQuiz AI</h1>
+<form action="/generate" method="post" onsubmit="showLoader()">
+    <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
+    <br/>
+    <button type="submit">Generate Flashcards</button>
+    <div class="loader" id="loader"></div>
+</form>
+</body>
+</html>

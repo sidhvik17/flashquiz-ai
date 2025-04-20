@@ -1,0 +1,14 @@
+server.port=${PORT:8080}
+
+spring.datasource.url=jdbc:postgresql://ep-noisy-wave-a1r0aril.ap-southeast-1.pg.koyeb.app/koyebdb?
+spring.datasource.username=koyeb-adm
+spring.datasource.password=npg_JFNfAY4rQwS5
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+spring.thymeleaf.cache=false
+HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+
+
