@@ -20,7 +20,7 @@ public class FlashcardService {
 
     private final WebClient webClient = WebClient.builder()
             .baseUrl("https://api.openai.com/v1/chat/completions")
-            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + System.getenv("OPENAI_API_KEY"))
             .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
             .build();
 
@@ -35,7 +35,10 @@ public class FlashcardService {
         {
           "model": "gpt-3.5-turbo",
           "messages": [
-            {"role": "user", "content": "%s"}
+            {
+              "role": "user",
+              "content": "%s"
+            }
           ],
           "temperature": 0.7
         }
@@ -54,6 +57,7 @@ public class FlashcardService {
         System.out.println("⬅️ OpenAI Response: " + response);
 
         List<Flashcard> flashcards = new ArrayList<>();
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
