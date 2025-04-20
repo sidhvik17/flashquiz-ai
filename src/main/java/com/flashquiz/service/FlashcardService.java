@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
 
-
 @Service
 public class FlashcardService {
 
@@ -26,23 +25,21 @@ public class FlashcardService {
             .build();
 
     public List<Flashcard> generateFlashcards(String inputText) {
-        List<Flashcard> flashcards = new ArrayList<>();
         System.out.println("🔁 Called generateFlashcards()");
         System.out.println("Input Text: " + inputText);
         System.out.println("Using API key? " + (openaiApiKey != null && !openaiApiKey.isBlank()));
 
+        String prompt = "Generate 5 flashcard Q&A pairs for studying the topic: " + inputText + ". Format:\nQ: ...\nA: ...";
+
         String requestBody = """
-{
-  "model": "gpt-3.5-turbo",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Generate 5 flashcard Q&A pairs for: Newton's Laws of Motion. Format: Q: ...\\nA: ..."
-    }
-  ],
-  "temperature": 0.7
-}
-""";
+        {
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {"role": "user", "content": "%s"}
+          ],
+          "temperature": 0.7
+        }
+        """.formatted(prompt);
 
         String response = webClient.post()
                 .bodyValue(requestBody)
@@ -56,24 +53,26 @@ public class FlashcardService {
 
         System.out.println("⬅️ OpenAI Response: " + response);
 
+        List<Flashcard> flashcards = new ArrayList<>();
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(response);
-            String content = root.path("choices").get(0).path("message").path("content").asText();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode contentNode = root.path("choices").get(0).path("message").path("content");
 
-            String[] lines = content.split("\\n");
-            String question = null;
-            for (String line : lines) {
-                if (line.startsWith("Q:")) {
-                    question = line.substring(2).trim();
-                } else if (line.startsWith("A:") && question != null) {
-                    String answer = line.substring(2).trim();
-                    flashcards.add(new Flashcard(question, answer));
-                    question = null;
+            if (!contentNode.isMissingNode()) {
+                String[] lines = contentNode.asText().split("\\n");
+                String question = null;
+                for (String line : lines) {
+                    if (line.trim().startsWith("Q:")) {
+                        question = line.substring(2).trim();
+                    } else if (line.trim().startsWith("A:") && question != null) {
+                        flashcards.add(new Flashcard(question, line.substring(2).trim()));
+                        question = null;
+                    }
                 }
             }
 
-            System.out.println("✅ Flashcards Parsed: " + flashcards.size());
+            System.out.println("✅ Parsed Flashcards: " + flashcards.size());
         } catch (Exception e) {
             System.err.println("❌ JSON parsing failed: " + e.getMessage());
         }
