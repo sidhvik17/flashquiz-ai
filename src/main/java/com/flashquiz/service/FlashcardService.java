@@ -15,16 +15,17 @@ public class FlashcardService {
     @Value("${HUGGINGFACE_API_KEY}")
     private String huggingfaceApiKey;
 
-    private final WebClient webClient = WebClient.builder()
-            .baseUrl("https://api-inference.huggingface.co/models/bigscience/bloomz-560m") // ✅ lightweight, public model
-            .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
-            .defaultHeader("Content-Type", "application/json")
-            .build();
-
     public List<Flashcard> generateFlashcards(String inputText) {
         System.out.println("🔁 Called generateFlashcards()");
         System.out.println("Input Text: " + inputText);
         System.out.println("Using API key? " + (huggingfaceApiKey != null && !huggingfaceApiKey.isBlank()));
+
+        // Create WebClient dynamically after API key is injected
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://api-inference.huggingface.co/models/bigscience/bloomz-560m")
+                .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
+                .defaultHeader("Content-Type", "application/json")
+                .build();
 
         String prompt = "Generate 5 flashcard Q&A pairs for studying the topic: " + inputText + ". Format:\nQ: ...\nA: ...";
 
@@ -43,12 +44,8 @@ public class FlashcardService {
         System.out.println("⬅️ HuggingFace Response: " + response);
 
         List<Flashcard> flashcards = new ArrayList<>();
-
         try {
-            String text = response;
-
-            // fallback parser (since bloomz-560m responds with plain text)
-            String[] lines = text.split("\\n");
+            String[] lines = response.split("\\n");
             String question = null;
             for (String line : lines) {
                 if (line.trim().startsWith("Q:")) {
@@ -59,10 +56,9 @@ public class FlashcardService {
                     question = null;
                 }
             }
-
             System.out.println("✅ Parsed Flashcards: " + flashcards.size());
         } catch (Exception e) {
-            System.err.println("❌ JSON Parsing failed: " + e.getMessage());
+            System.err.println("❌ Parsing failed: " + e.getMessage());
         }
 
         return flashcards;
