@@ -16,20 +16,16 @@ public class FlashcardService {
     private String huggingfaceApiKey;
 
     private final WebClient webClient = WebClient.builder()
-            .baseUrl("https://api-inference.huggingface.co/models/tiiuae/falcon-rw-1b")
+            .baseUrl("https://api-inference.huggingface.co/models/mrm8488/t5-base-finetuned-question-generation-ap")
             .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
             .defaultHeader("Content-Type", "application/json")
             .build();
 
     public List<Flashcard> generateFlashcards(String inputText) {
-        System.out.println("🔁 Called generateFlashcards()");
-        System.out.println("Input Text: " + inputText);
-        System.out.println("Using API key? " + (huggingfaceApiKey != null && !huggingfaceApiKey.isBlank()));
+        List<Flashcard> flashcards = new ArrayList<>();
 
-        String prompt = "Generate 5 flashcard question-answer pairs about: " + inputText +
-                "\nFormat:\nQ: ...\nA: ...";
-
-        String requestBody = "{ \"inputs\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\" }";
+        String prompt = "generate questions: " + inputText;
+        String requestBody = "{ \"inputs\": \"" + prompt.replace("\"", "\\\"") + "\" }";
 
         String response = webClient.post()
                 .bodyValue(requestBody)
@@ -43,24 +39,17 @@ public class FlashcardService {
 
         System.out.println("⬅️ HuggingFace Response: " + response);
 
-        List<Flashcard> flashcards = new ArrayList<>();
         try {
             String text = response;
-            String[] lines = text.split("\\n");
-            String question = null;
+            String[] questions = text.split("\\?");
 
-            for (String line : lines) {
-                if (line.trim().startsWith("Q:")) {
-                    question = line.substring(2).trim();
-                } else if (line.trim().startsWith("A:") && question != null) {
-                    String answer = line.substring(2).trim();
-                    flashcards.add(new Flashcard(question, answer));
-                    question = null;
+            for (String q : questions) {
+                if (!q.trim().isEmpty()) {
+                    flashcards.add(new Flashcard(q.trim() + "?", "You can provide an answer")); // default answer
                 }
             }
-            System.out.println("✅ Parsed Flashcards: " + flashcards.size());
         } catch (Exception e) {
-            System.err.println("❌ JSON Parsing failed: " + e.getMessage());
+            System.err.println("❌ Parsing error: " + e.getMessage());
         }
 
         return flashcards;
