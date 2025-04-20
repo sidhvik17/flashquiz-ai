@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="new commit using chatgpt api base url changed">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="final commit i think so change the model so it&#10;can take paragraph as input also" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,14 +63,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745056225501</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Resolved merge conflicts">
-      <option name="closed" value="true" />
-      <created>1745057726506</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1745057726506</updated>
     </task>
     <task id="LOCAL-00003" summary="deleted Dockerfile">
       <option name="closed" value="true" />
@@ -458,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745165919914</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="final commit i think so change the model so it&#10;can take paragraph as input also">
+      <option name="closed" value="true" />
+      <created>1745166896554</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1745166896554</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -482,6 +480,7 @@
     <MESSAGE value="FlashcardService.java changes api integration" />
     <MESSAGE value="new commit using chatgpt api" />
     <MESSAGE value="new commit using chatgpt api base url changed" />
-    <option name="LAST_COMMIT_MESSAGE" value="new commit using chatgpt api base url changed" />
+    <MESSAGE value="final commit i think so change the model so it&#10;can take paragraph as input also" />
+    <option name="LAST_COMMIT_MESSAGE" value="final commit i think so change the model so it&#10;can take paragraph as input also" />
   </component>
 </project>
