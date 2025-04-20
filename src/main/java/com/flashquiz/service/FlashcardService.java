@@ -15,19 +15,19 @@ public class FlashcardService {
     @Value("${HUGGINGFACE_API_KEY}")
     private String huggingfaceApiKey;
 
+    private final WebClient webClient = WebClient.builder()
+            .baseUrl("https://api-inference.huggingface.co/models/tiiuae/falcon-rw-1b")
+            .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
+            .defaultHeader("Content-Type", "application/json")
+            .build();
+
     public List<Flashcard> generateFlashcards(String inputText) {
         System.out.println("🔁 Called generateFlashcards()");
         System.out.println("Input Text: " + inputText);
         System.out.println("Using API key? " + (huggingfaceApiKey != null && !huggingfaceApiKey.isBlank()));
 
-        // ✅ Update model URL
-        WebClient webClient = WebClient.builder()
-                .baseUrl("https://api-inference.huggingface.co/models/google/flan-t5-small")
-                .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
-                .defaultHeader("Content-Type", "application/json")
-                .build();
-
-        String prompt = "Generate question and answer pairs about " + inputText + ". Format each with:\nQ: ...\nA: ...";
+        String prompt = "Generate 5 flashcard question-answer pairs about: " + inputText +
+                "\nFormat:\nQ: ...\nA: ...";
 
         String requestBody = "{ \"inputs\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\" }";
 
@@ -45,9 +45,10 @@ public class FlashcardService {
 
         List<Flashcard> flashcards = new ArrayList<>();
         try {
-            // fallback parsing from plain text
-            String[] lines = response.split("\\\\n|\\n");
+            String text = response;
+            String[] lines = text.split("\\n");
             String question = null;
+
             for (String line : lines) {
                 if (line.trim().startsWith("Q:")) {
                     question = line.substring(2).trim();
@@ -57,12 +58,12 @@ public class FlashcardService {
                     question = null;
                 }
             }
-
             System.out.println("✅ Parsed Flashcards: " + flashcards.size());
         } catch (Exception e) {
-            System.err.println("❌ Parsing error: " + e.getMessage());
+            System.err.println("❌ JSON Parsing failed: " + e.getMessage());
         }
 
         return flashcards;
     }
+
 }
