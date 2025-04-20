@@ -21,7 +21,7 @@ public class FlashcardService {
     private String openaiApiKey;
 
     private final WebClient webClient = WebClient.builder()
-            .baseUrl("https://api.openai.com/v1/chat/completions")
+            .baseUrl("https://api.openai.com/v1/models")
             .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
