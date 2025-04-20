@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="new commit using chatgpt api" />
+    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="new commit using chatgpt api">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -424,7 +426,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745160265575</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="new commit using chatgpt api">
+      <option name="closed" value="true" />
+      <created>1745160653697</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1745160653697</updated>
+    </task>
+    <task id="LOCAL-00047" summary="new commit using chatgpt api">
+      <option name="closed" value="true" />
+      <created>1745160944508</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1745160944508</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

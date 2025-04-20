@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 
 @Service
 public class FlashcardService {
@@ -20,9 +22,10 @@ public class FlashcardService {
 
     private final WebClient webClient = WebClient.builder()
             .baseUrl("https://api.openai.com/v1/chat/completions")
-            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + System.getenv("OPENAI_API_KEY"))
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
+
 
     public List<Flashcard> generateFlashcards(String inputText) {
         System.out.println("🔁 Called generateFlashcards()");
@@ -32,17 +35,22 @@ public class FlashcardService {
         String prompt = "Generate 5 flashcard Q&A pairs for studying the topic: " + inputText + ". Format:\nQ: ...\nA: ...";
 
         String requestBody = """
-        {
-          "model": "gpt-3.5-turbo",
-          "messages": [
-            {
-              "role": "user",
-              "content": "%s"
-            }
-          ],
-          "temperature": 0.7
-        }
-        """.formatted(prompt);
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant that creates flashcards from educational text."
+    },
+    {
+      "role": "user",
+      "content": "Generate 5 flashcard Q&A pairs on the topic: %s. Each should start with 'Q:' and the answer with 'A:'."
+    }
+  ],
+  "temperature": 0.7
+}
+""".formatted(inputText);
+
 
         String response = webClient.post()
                 .bodyValue(requestBody)
