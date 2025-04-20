@@ -20,14 +20,14 @@ public class FlashcardService {
         System.out.println("Input Text: " + inputText);
         System.out.println("Using API key? " + (huggingfaceApiKey != null && !huggingfaceApiKey.isBlank()));
 
-        // Create WebClient dynamically after API key is injected
+        // ✅ Update model URL
         WebClient webClient = WebClient.builder()
-                .baseUrl("https://api-inference.huggingface.co/models/bigscience/bloomz-560m")
+                .baseUrl("https://api-inference.huggingface.co/models/google/flan-t5-small")
                 .defaultHeader("Authorization", "Bearer " + huggingfaceApiKey)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
 
-        String prompt = "Generate 5 flashcard Q&A pairs for studying the topic: " + inputText + ". Format:\nQ: ...\nA: ...";
+        String prompt = "Generate 5 study flashcards for the topic: " + inputText + ". Format each with:\nQ: ...\nA: ...";
 
         String requestBody = "{ \"inputs\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\" }";
 
@@ -45,7 +45,8 @@ public class FlashcardService {
 
         List<Flashcard> flashcards = new ArrayList<>();
         try {
-            String[] lines = response.split("\\n");
+            // fallback parsing from plain text
+            String[] lines = response.split("\\\\n|\\n");
             String question = null;
             for (String line : lines) {
                 if (line.trim().startsWith("Q:")) {
@@ -56,9 +57,10 @@ public class FlashcardService {
                     question = null;
                 }
             }
+
             System.out.println("✅ Parsed Flashcards: " + flashcards.size());
         } catch (Exception e) {
-            System.err.println("❌ Parsing failed: " + e.getMessage());
+            System.err.println("❌ Parsing error: " + e.getMessage());
         }
 
         return flashcards;
