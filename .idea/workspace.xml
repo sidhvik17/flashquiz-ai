@@ -362,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745152524877</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="FlashcardService.java changes api integration">
+      <option name="closed" value="true" />
+      <created>1745153188151</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1745153188151</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

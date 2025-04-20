@@ -27,7 +27,7 @@ public class FlashcardService {
                 .defaultHeader("Content-Type", "application/json")
                 .build();
 
-        String prompt = "Generate 5 study flashcards for the topic: " + inputText + ". Format each with:\nQ: ...\nA: ...";
+        String prompt = "Generate question and answer pairs about " + inputText + ". Format each with:\nQ: ...\nA: ...";
 
         String requestBody = "{ \"inputs\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\" }";
 
