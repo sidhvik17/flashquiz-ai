@@ -43,14 +43,14 @@ public class FlashcardService {
             // Create request payload
             String requestBody = """
     {
-      "model": "openai/gpt-3.5-turbo",
-      "messages": [
-        {"role": "system", "content": "You are a helpful flashcard generator. Only use the information from the user-provided paragraph."},
-        {"role": "user", "content": "Paragraph: %s\\n\\nGenerate 5 flashcards (Q: and A:) based only on the paragraph."}
-      ],
-      "temperature": 0.7
-    }
-    """.formatted(inputText.replace("\"", "\\\""));
+       "model": "openai/gpt-3.5-turbo",
+  "messages": [
+    {"role": "system", "content": "You are a helpful flashcard generator."},
+    {"role": "user", "content": "Generate 5 flashcards (Q: and A:) about the topic: %s"}
+  ],
+  "temperature": 0.7
+}
+""".formatted(inputText.replace("\"", "\\\""));
 
 
 
