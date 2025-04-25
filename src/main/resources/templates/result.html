@@ -1,66 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Flashcards - FlashQuiz AI</title>
+    <title>Generated Flashcards</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #003366;
-            padding: 2em;
+        .card {
+            background: #f0f4ff;
+            border-radius: 12px;
+            margin: 1rem 0;
+            padding: 1.2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-        h2 {
-            color: #004080;
-            border-bottom: 2px solid #004080;
-            padding-bottom: 0.3em;
+        .answer {
+            display: none;
+            margin-top: 0.5rem;
+            color: #333;
         }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        li {
-            margin-bottom: 1.5em;
-            background: #e6f0ff;
-            padding: 1em;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 128, 0.1);
-        }
-        strong {
-            font-size: 1.1em;
-            color: #002855;
-        }
-        em {
-            display: block;
-            margin-top: 0.5em;
-            font-style: normal;
-            color: #004080;
-        }
-        .retry {
-            margin-top: 2em;
-        }
-        .retry a {
-            background: #004080;
+        .show-btn {
+            margin-top: 0.8rem;
+            padding: 0.5rem 1rem;
+            background-color: #3f51b5;
             color: white;
-            padding: 0.7em 1.2em;
+            border: none;
             border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .retry a:hover {
-            background-color: #0066cc;
+            cursor: pointer;
         }
     </style>
+    <script>
+        function toggleAnswer(id) {
+            const answerDiv = document.getElementById('answer-' + id);
+            const btn = document.getElementById('btn-' + id);
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+                btn.innerText = 'Hide Answer';
+            } else {
+                answerDiv.style.display = 'none';
+                btn.innerText = 'Show Answer';
+            }
+        }
+    </script>
 </head>
 <body>
 <h2>Generated Flashcards</h2>
-<ul>
-    <li th:each="card : ${flashcards}">
-        <strong th:text="${card.question}"></strong>
-        <em th:text="${card.answer}"></em>
-    </li>
-</ul>
-<div class="retry">
-    <a href="/">Try Another Topic</a>
+
+<div th:each="flashcard, iterStat : ${flashcards}" class="card">
+    <strong>Q: <span th:text="${flashcard.question}"></span></strong>
+    <div id="answer-[[${iterStat.index}]]" class="answer">
+        <strong>A: </strong><span th:text="${flashcard.answer}"></span>
+    </div>
+    <button id="btn-[[${iterStat.index}]]" class="show-btn" onclick="toggleAnswer([[${iterStat.index}]])">Show Answer</button>
 </div>
+
+<a href="/" style="margin-top: 2rem; display: inline-block;">Try Another Topic</a>
 </body>
 </html>
