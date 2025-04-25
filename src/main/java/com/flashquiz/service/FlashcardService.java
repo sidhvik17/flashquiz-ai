@@ -46,7 +46,7 @@ public class FlashcardService {
        "model": "openai/gpt-3.5-turbo",
   "messages": [
     {"role": "system", "content": "You are a helpful flashcard generator."},
-    {"role": "user", "content": "Generate 5 flashcards (Q: and A:) about the topic: %s"}
+    {"role": "user", "content": "Generate 10 flashcards (Q: and A:) about the topic: %s"}
   ],
   "temperature": 0.7
 }
