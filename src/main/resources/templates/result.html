@@ -1,65 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Flashcards</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 2rem;
-            background-color: #f9faff;
-        }
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .answer {
-            display: none;
-            margin-top: 0.8rem;
-            color: #444;
-        }
-        .show-btn {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-    </style>
+    <title>Flash Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800 font-sans">
+<div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Flash Quiz</h1>
 
-<h2>📚 Flashcards</h2>
+    <div th:each="flashcard : ${flashcards}" class="mb-4 p-4 bg-white rounded-xl shadow hover:shadow-lg transition duration-300">
+        <p class="text-lg font-medium">Q: <span th:text="${flashcard.question}"></span></p>
 
-<div th:each="flashcard, iterStat : ${flashcards}" class="card">
-    <strong>Q: <span th:text="${flashcard.question}"></span></strong>
+        <!-- Button and Answer Toggle -->
+        <button
+                onclick="this.nextElementSibling.classList.toggle('hidden')"
+                class="mt-3 text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300"
+        >
+            Show Answer
+        </button>
 
-    <div id="answer-[[${iterStat.index}]]" class="answer">
-        <strong>A:</strong> <span th:text="${flashcard.answer}"></span>
+        <p class="hidden mt-2 text-gray-700">A: <span th:text="${flashcard.answer}"></span></p>
     </div>
 
-    <button class="show-btn" id="btn-[[${iterStat.index}]]" onclick="toggleAnswer([[${iterStat.index}]])">Show Answer</button>
+    <a href="/" class="block mt-10 text-center text-blue-600 hover:underline">← Back to Home</a>
 </div>
-
-<script>
-    function toggleAnswer(id) {
-        const answer = document.getElementById('answer-' + id);
-        const btn = document.getElementById('btn-' + id);
-        if (answer.style.display === 'none' || answer.style.display === '') {
-            answer.style.display = 'block';
-            btn.innerText = 'Hide Answer';
-        } else {
-            answer.style.display = 'none';
-            btn.innerText = 'Show Answer';
-        }
-    }
-</script>
-
 </body>
 </html>
