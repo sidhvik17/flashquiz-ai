@@ -4,40 +4,63 @@
     <title>FlashQuiz AI</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #eef2f7, #f6f9fc);
             color: #003366;
-            padding: 2em;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #004080;
         }
         textarea {
             width: 100%;
             padding: 1em;
             border-radius: 8px;
             border: 1px solid #ccc;
-            font-size: 1em;
-            background: #ffffff;
+            font-size: 1rem;
+            min-height: 150px;
+            resize: vertical;
+            background: #f9f9f9;
         }
         button {
-            margin-top: 1em;
-            padding: 0.7em 1.5em;
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
             background-color: #004080;
             color: white;
+            font-size: 1.1rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #0066cc;
         }
         .loader {
             display: none;
-            margin-top: 1em;
+            margin: 1.5rem auto 0;
             border: 5px solid #f3f3f3;
             border-top: 5px solid #004080;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -52,12 +75,16 @@
     </script>
 </head>
 <body>
-<h1>FlashQuiz AI</h1>
-<form action="/generate" method="post" onsubmit="showLoader()">
-    <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
-    <br/>
-    <button type="submit">Generate Flashcards</button>
-    <div class="loader" id="loader"></div>
-</form>
+
+<div class="container">
+    <h1>FlashQuiz AI</h1>
+    <form action="/generate" method="post" onsubmit="showLoader()">
+        <textarea name="inputText" placeholder="Enter your topic or paragraph here..." required></textarea>
+        <br/>
+        <button type="submit">Generate Flashcards</button>
+        <div class="loader" id="loader"></div>
+    </form>
+</div>
+
 </body>
 </html>
