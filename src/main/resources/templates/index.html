@@ -1,63 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>FlashQuiz AI</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #003366;
-            padding: 2em;
-        }
-        textarea {
-            width: 100%;
-            padding: 1em;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-            background: #ffffff;
-        }
-        button {
-            margin-top: 1em;
-            padding: 0.7em 1.5em;
-            background-color: #004080;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        button:hover {
-            background-color: #0066cc;
-        }
-        .loader {
-            display: none;
-            margin-top: 1em;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #004080;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-    <script>
-        function showLoader() {
-            document.getElementById('loader').style.display = 'inline-block';
-        }
-    </script>
+    <meta charset="UTF-8">
+    <title>FlashQuiz AI - Generate Flashcards</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-<h1>FlashQuiz AI</h1>
-<form action="/generate" method="post" onsubmit="showLoader()">
-    <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
-    <br/>
-    <button type="submit">Generate Flashcards</button>
-    <div class="loader" id="loader"></div>
-</form>
+<body class="bg-white text-dark">
+<div class="container mt-5">
+    <h2 class="text-center text-primary">AI-Powered Flashcard Generator</h2>
+    <form th:action="@{/generate}" method="post">
+        <div class="mb-3">
+            <label for="paragraph" class="form-label text-primary">Enter Topic or Paragraph</label>
+            <textarea id="paragraph" name="paragraph" rows="6" class="form-control border-primary" required></textarea>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Generate Flashcards</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
