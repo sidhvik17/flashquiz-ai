@@ -1,48 +1,88 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>AI Flashcard</title>
+    <title>AI Flashcard Generator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e6f2ff, #cce0ff);
             color: #003366;
-            padding: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
+
+        .container {
+            background-color: #ffffff;
+            padding: 2em 3em;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5em;
+            color: #00264d;
+            font-size: 2em;
+        }
+
         textarea {
             width: 100%;
             padding: 1em;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: 1px solid #aac6e3;
             font-size: 1em;
-            background: #ffffff;
+            resize: vertical;
+            box-sizing: border-box;
+            background-color: #fefefe;
         }
+
         button {
-            margin-top: 1em;
-            padding: 0.7em 1.5em;
+            width: 100%;
+            margin-top: 1.2em;
+            padding: 0.8em;
             background-color: #004080;
             color: white;
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 10px;
             font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
-            background-color: #0066cc;
+            background-color: #0059b3;
         }
+
         .loader {
             display: none;
-            margin-top: 1em;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #004080;
+            margin: 1em auto 0;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #004080;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5em;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
         }
     </style>
     <script>
@@ -52,12 +92,13 @@
     </script>
 </head>
 <body>
-<h1>AI Flashcard</h1>
-<form action="/generate" method="post" onsubmit="showLoader()">
-    <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
-    <br/>
-    <button type="submit">Generate Flashcards</button>
-    <div class="loader" id="loader"></div>
-</form>
+<div class="container">
+    <h1>AI Flashcard Generator</h1>
+    <form action="/generate" method="post" onsubmit="showLoader()">
+        <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
+        <button type="submit">Generate Flashcards</button>
+        <div class="loader" id="loader"></div>
+    </form>
+</div>
 </body>
 </html>
