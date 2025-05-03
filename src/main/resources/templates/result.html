@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Flash Quiz</title>
+    <title>AI Flashcard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
 <div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">Flash Quiz</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">AI Flashcard</h1>
 
     <div th:each="flashcard : ${flashcards}" class="mb-4 p-4 bg-white rounded-xl shadow hover:shadow-lg transition duration-300">
         <p class="text-lg font-medium">Q: <span th:text="${flashcard.question}"></span></p>
