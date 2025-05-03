@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="front end test">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="6edfe1a9-3a3b-4f34-8dc3-c1bc36d302f6" name="Changes" comment="front end test" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,14 +82,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745056225501</updated>
-    </task>
-    <task id="LOCAL-00017" summary="FlashcardService.java changes in api integration">
-      <option name="closed" value="true" />
-      <created>1745071756696</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1745071756696</updated>
     </task>
     <task id="LOCAL-00018" summary="FlashcardService.java changes in api integration">
       <option name="closed" value="true" />
@@ -477,7 +467,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746246699909</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="front end test">
+      <option name="closed" value="true" />
+      <created>1746247189187</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1746247189187</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

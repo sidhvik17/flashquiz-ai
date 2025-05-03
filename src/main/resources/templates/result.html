@@ -4,25 +4,30 @@
     <title>AI Flashcard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-<div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">AI Flashcard</h1>
+<body class="bg-gradient-to-br from-blue-50 to-white text-gray-800 font-sans min-h-screen">
+<div class="max-w-4xl mx-auto px-6 py-10">
+    <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-10">AI Flashcard</h1>
 
-    <div th:each="flashcard : ${flashcards}" class="mb-4 p-4 bg-white rounded-xl shadow hover:shadow-lg transition duration-300">
-        <p class="text-lg font-medium">Q: <span th:text="${flashcard.question}"></span></p>
+    <!-- Flashcards -->
+    <div th:each="flashcard : ${flashcards}" class="mb-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-6">
+        <p class="text-xl font-semibold text-gray-900 mb-3">Q: <span th:text="${flashcard.question}"></span></p>
 
-        <!-- Button and Answer Toggle -->
         <button
                 onclick="this.nextElementSibling.classList.toggle('hidden')"
-                class="mt-3 text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300"
+                class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full transition duration-300 focus:outline-none"
         >
             Show Answer
         </button>
 
-        <p class="hidden mt-2 text-gray-700">A: <span th:text="${flashcard.answer}"></span></p>
+        <p class="hidden mt-4 text-base text-gray-700 leading-relaxed">A: <span th:text="${flashcard.answer}"></span></p>
     </div>
 
-    <a href="/" class="block mt-10 text-center text-blue-600 hover:underline">← Back to Home</a>
+    <!-- Back to Home -->
+    <div class="mt-12 text-center">
+        <a href="/" class="text-blue-700 font-medium hover:underline text-sm">
+            ← Back to Home
+        </a>
+    </div>
 </div>
 </body>
 </html>
