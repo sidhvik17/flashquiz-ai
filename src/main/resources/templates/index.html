@@ -59,6 +59,14 @@
             background-color: #0059b3;
         }
 
+        .error {
+            margin: 0 0 1em;
+            padding: 0.8em 1em;
+            border-radius: 10px;
+            background-color: #fdecea;
+            color: #8a1c13;
+        }
+
         .loader {
             display: none;
             margin: 1em auto 0;
@@ -94,8 +102,9 @@
 <body>
 <div class="container">
     <h1>AI Flashcard Generator</h1>
+    <p class="error" role="alert" th:if="${error}" th:text="${error}"></p>
     <form action="/generate" method="post" onsubmit="showLoader()">
-        <textarea name="topicText" rows="8" placeholder="Enter your topic here..."></textarea>
+        <textarea name="topicText" rows="8" maxlength="2000" required placeholder="Enter your topic here..." th:text="${topicText}"></textarea>
         <button type="submit">Generate Flashcards</button>
         <div class="loader" id="loader"></div>
     </form>

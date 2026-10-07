@@ -8,6 +8,14 @@
 <div class="max-w-4xl mx-auto px-6 py-10">
     <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-10">AI Flashcard</h1>
 
+    <!-- Saved deck notice and regenerate -->
+    <form action="/generate" method="post" class="mb-8 text-center text-sm text-gray-600">
+        <input type="hidden" name="topicText" th:value="${topic}">
+        <input type="hidden" name="refresh" value="true">
+        <span th:if="${cached}">Showing the saved deck for this topic.</span>
+        <button type="submit" class="text-blue-700 font-medium hover:underline">Regenerate</button>
+    </form>
+
     <!-- Flashcards -->
     <div th:each="flashcard : ${flashcards}" class="mb-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-6">
         <p class="text-xl font-semibold text-gray-900 mb-3">Q: <span th:text="${flashcard.question}"></span></p>
