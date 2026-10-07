@@ -1,92 +1,98 @@
 package com.flashquiz.service;
 
+import com.flashquiz.model.Deck;
 import com.flashquiz.model.Flashcard;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
+import com.flashquiz.repository.FlashcardRepository;
+import com.flashquiz.service.FlashcardGenerationException.Reason;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.List;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.*;
-
+import java.util.Locale;
 
 @Service
 public class FlashcardService {
 
-    @Value("${OPENROUTER_API_KEY}")
-    private String openRouterApiKey;
+    private static final Logger log = LoggerFactory.getLogger(FlashcardService.class);
 
-    private final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+    private final FlashcardRepository repository;
+    private final OpenRouterClient client;
+    private final TransactionTemplate transaction;
 
-    public List<Flashcard> generateFlashcards(String inputText) {
-        System.out.println("🔁 Called generateFlashcards()");
-        System.out.println("Input Text: " + inputText);
-        System.out.println("Using API key? " + (openRouterApiKey != null && !openRouterApiKey.isBlank()));
+    public FlashcardService(FlashcardRepository repository, OpenRouterClient client, TransactionTemplate transaction) {
+        this.repository = repository;
+        this.client = client;
+        this.transaction = transaction;
+    }
 
-        List<Flashcard> flashcards = new ArrayList<>();
+    /**
+     * Returns the stored deck for the topic, or asks the model and stores the result.
+     * With {@code refresh} the stored deck is ignored and replaced.
+     */
+    public Deck generateFlashcards(String topic, boolean refresh) {
+        long start = System.nanoTime();
+        String key = topicKey(topic);
 
-        try {
-            // Prepare headers
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + openRouterApiKey);
-
-            // Create request payload
-            String requestBody = """
-    {
-       "model": "openai/gpt-3.5-turbo",
-  "messages": [
-    {"role": "system", "content": "You are a helpful flashcard generator."},
-    {"role": "user", "content": "Generate 15 flashcards (Q: and A:) about the topic: %s"}
-  ],
-  "temperature": 0.7
-}
-""".formatted(inputText.replace("\"", "\\\""));
-
-
-
-            System.out.println("📤 Request Body: " + requestBody);
-
-            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
-
-            // Send request
-            RestTemplate restTemplate = new RestTemplate();
-            String response = restTemplate.postForObject(OPENROUTER_URL, entity, String.class);
-
-            System.out.println("⬅️ OpenRouter Response: " + response);
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
-            String content = root.path("choices").get(0).path("message").path("content").asText();
-
-            // Parse into flashcards
-            String[] lines = content.split("\\n");
-            String question = null;
-            for (String line : lines) {
-                if (line.trim().startsWith("Q:")) {
-                    question = line.substring(2).trim();
-                } else if (line.trim().startsWith("A:") && question != null) {
-                    String answer = line.substring(2).trim();
-                    flashcards.add(new Flashcard(question, answer));
-                    question = null;
-                }
+        if (!refresh) {
+            List<Flashcard> stored = findStored(key);
+            if (!stored.isEmpty()) {
+                logServed("cache", key, stored, start);
+                return new Deck(topic, stored, true);
             }
-
-            System.out.println("✅ Parsed Flashcards: " + flashcards.size());
-
-        } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
         }
 
-        return flashcards;
+        List<Flashcard> cards = FlashcardParser.parse(client.complete(topic));
+        if (cards.isEmpty()) {
+            throw new FlashcardGenerationException(Reason.BAD_RESPONSE, "Model reply contained no Q:/A: pairs");
+        }
+        store(key, cards);
+        logServed("llm", key, cards, start);
+        return new Deck(topic, cards, false);
+    }
+
+    static String topicKey(String topic) {
+        String normalized = topic.strip().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+        try {
+            MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+            return HexFormat.of().formatHex(sha256.digest(normalized.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    // The stored deck is an optimization: if the database is unavailable the request
+    // still succeeds through the model, it just is not served or saved from storage.
+    private List<Flashcard> findStored(String key) {
+        try {
+            return repository.findByTopicKeyOrderByIdAsc(key);
+        } catch (DataAccessException | TransactionException e) {
+            log.warn("Stored deck lookup failed, falling back to the model", e);
+            return List.of();
+        }
+    }
+
+    private void store(String key, List<Flashcard> cards) {
+        cards.forEach(card -> card.setTopicKey(key));
+        try {
+            transaction.executeWithoutResult(status -> {
+                repository.deleteByTopicKey(key);
+                repository.saveAll(cards);
+            });
+        } catch (DataAccessException | TransactionException e) {
+            log.warn("Could not store deck, serving it unsaved", e);
+        }
+    }
+
+    private static void logServed(String source, String key, List<Flashcard> cards, long startNanos) {
+        log.info("Served deck source={} topicKey={} cards={} elapsedMs={}",
+                source, key.substring(0, 12), cards.size(), (System.nanoTime() - startNanos) / 1_000_000);
     }
 }

@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build, test and package
+        run: ./mvnw -B -ntp verify
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: flashquiz-ai-jar
+          path: target/flashquiz-ai-*.jar
+          if-no-files-found: error
+
+  smoke:
+    name: Smoke test on PostgreSQL
+    needs: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: flashquiz
+          # Throwaway database that exists only for this job
+          POSTGRES_PASSWORD: ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: flashquiz-ai-jar
+          path: target
+
+      - name: Run the packaged jar against PostgreSQL
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: flashquiz
+          DB_USER: postgres
+          DB_PASSWORD: ci-only
+        run: scripts/smoke-test.sh target/flashquiz-ai-*.jar
+
+  image:
+    name: Docker image
+    needs: [test, smoke]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      # Pull requests only prove the image builds; merges to main publish it
+      PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image tags and labels
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha
+
+      - name: Build and publish
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
